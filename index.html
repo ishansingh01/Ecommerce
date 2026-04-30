@@ -350,10 +350,7 @@
       <button class="hero-cta" onclick="loadProducts()">Browse Collection →</button>
     </div>
 
-    <div id="api-status" class="api-banner checking">
-      <span class="api-dot"></span>
-      <span id="api-status-text">Connecting to backend at localhost:8080…</span>
-    </div>
+
 
     <div class="section-header">
       <h2 class="section-title">Products</h2>
@@ -417,7 +414,7 @@
 </main>
 
 <footer>
-  Écomm · Spring Boot 4 · MySQL · Running at <strong>localhost:8080</strong> · Built by Ishan
+  Écomm · Powered by Spring Boot & MySQL · Built by Ishan
 </footer>
 
 <script>
@@ -426,27 +423,7 @@
   let cart = [];
   let currentFilter = 'all';
 
-  // ─── API HEALTH CHECK ──────────────────────────────────────────────────
-  async function checkApi() {
-    const banner = document.getElementById('api-status');
-    const text = document.getElementById('api-status-text');
-    try {
-      const r = await fetch(`${API}/actuator/health`, { signal: AbortSignal.timeout(3000) });
-      if (r.ok) {
-        banner.className = 'api-banner ok';
-        text.textContent = 'Backend connected — localhost:8080 is up';
-      } else throw new Error();
-    } catch {
-      try {
-        await fetch(`${API}/`, { signal: AbortSignal.timeout(2000) });
-        banner.className = 'api-banner ok';
-        text.textContent = 'Backend reachable at localhost:8080';
-      } catch {
-        banner.className = 'api-banner err';
-        text.textContent = 'Cannot reach localhost:8080 — make sure your Spring Boot app is running';
-      }
-    }
-  }
+
 
   // ─── PRODUCTS ──────────────────────────────────────────────────────────
   const EMOJIS = { electronics:'📱', clothing:'👗', food:'🍎', books:'📚', sports:'⚽', home:'🏡', beauty:'💄', toys:'🧸', default:'📦' };
@@ -470,7 +447,7 @@
       grid.innerHTML = `<div class="state-box" style="grid-column:1/-1">
         <div class="icon">⚠️</div>
         <h3>Could not load products</h3>
-        <p>Make sure your backend is running at <strong>localhost:8080</strong> and the endpoint <code>/products</code> exists.</p>
+        <p>We could not load the products from the server. Please try again later.</p>
         <p style="margin-top:8px;font-size:0.8rem;color:#999">${e.message}</p>
         <button onclick="loadProducts()" style="margin-top:1rem;padding:0.5rem 1.5rem;background:var(--accent);color:#fff;border:none;border-radius:8px;cursor:pointer;font-family:var(--font-body)">Try Again</button>
       </div>`;
@@ -696,7 +673,6 @@
   }
 
   // ─── INIT ──────────────────────────────────────────────────────────────
-  checkApi();
   loadProducts();
 </script>
 </body>
