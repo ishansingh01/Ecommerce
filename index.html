@@ -352,7 +352,7 @@
 
     <div id="api-status" class="api-banner checking">
       <span class="api-dot"></span>
-      <span id="api-status-text">Connecting to backend at localhost:8081…</span>
+      <span id="api-status-text">Connecting to backend at localhost:8080…</span>
     </div>
 
     <div class="section-header">
@@ -417,11 +417,11 @@
 </main>
 
 <footer>
-  Écomm · Spring Boot 4 · MySQL · Running at <strong>localhost:8081</strong> · Built by Ishan
+  Écomm · Spring Boot 4 · MySQL · Running at <strong>localhost:8080</strong> · Built by Ishan
 </footer>
 
 <script>
-  const API = 'http://localhost:8081';
+  const API = 'http://localhost:8080';
   let allProducts = [];
   let cart = [];
   let currentFilter = 'all';
@@ -434,16 +434,16 @@
       const r = await fetch(`${API}/actuator/health`, { signal: AbortSignal.timeout(3000) });
       if (r.ok) {
         banner.className = 'api-banner ok';
-        text.textContent = 'Backend connected — localhost:8081 is up';
+        text.textContent = 'Backend connected — localhost:8080 is up';
       } else throw new Error();
     } catch {
       try {
         await fetch(`${API}/`, { signal: AbortSignal.timeout(2000) });
         banner.className = 'api-banner ok';
-        text.textContent = 'Backend reachable at localhost:8081';
+        text.textContent = 'Backend reachable at localhost:8080';
       } catch {
         banner.className = 'api-banner err';
-        text.textContent = 'Cannot reach localhost:8081 — make sure your Spring Boot app is running';
+        text.textContent = 'Cannot reach localhost:8080 — make sure your Spring Boot app is running';
       }
     }
   }
@@ -461,7 +461,7 @@
     const grid = document.getElementById('products-container');
     grid.innerHTML = `<div class="state-box" style="grid-column:1/-1"><div class="spinner"></div><p>Loading products…</p></div>`;
     try {
-      const r = await fetch(`${API}/api/products`);
+      const r = await fetch(`${API}/products`);
       if (!r.ok) throw new Error(`HTTP ${r.status}`);
       allProducts = await r.json();
       buildFilters();
@@ -470,7 +470,7 @@
       grid.innerHTML = `<div class="state-box" style="grid-column:1/-1">
         <div class="icon">⚠️</div>
         <h3>Could not load products</h3>
-        <p>Make sure your backend is running at <strong>localhost:8081</strong> and the endpoint <code>/api/products</code> exists.</p>
+        <p>Make sure your backend is running at <strong>localhost:8080</strong> and the endpoint <code>/products</code> exists.</p>
         <p style="margin-top:8px;font-size:0.8rem;color:#999">${e.message}</p>
         <button onclick="loadProducts()" style="margin-top:1rem;padding:0.5rem 1.5rem;background:var(--accent);color:#fff;border:none;border-radius:8px;cursor:pointer;font-family:var(--font-body)">Try Again</button>
       </div>`;
@@ -626,7 +626,7 @@
     const c = document.getElementById('orders-container');
     c.innerHTML = `<div class="state-box"><div class="spinner"></div><p>Loading orders…</p></div>`;
     try {
-      const r = await fetch(`${API}/api/orders`);
+      const r = await fetch(`${API}/orders/all-orders`);
       if (!r.ok) throw new Error(`HTTP ${r.status}`);
       const orders = await r.json();
       if (!orders.length) {
@@ -658,7 +658,7 @@
     const desc  = document.getElementById('new-desc').value.trim();
     if (!name || !price) { showToast('Name and price are required'); return; }
     try {
-      const r = await fetch(`${API}/api/products`, {
+      const r = await fetch(`${API}/products`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ name, category: cat, price, stock, description: desc })
